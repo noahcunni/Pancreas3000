@@ -7,15 +7,19 @@ import java.util.concurrent.TimeUnit;
 
 import com.github.noahcunni.therapy.InMemoryTherapyLog;
 import com.github.noahcunni.therapy.TherapyLog;
+import com.github.noahcunni.therapy.bolus.BolusSafety;
 import com.github.noahcunni.therapy.bolus.BolusService;
 
 public class App {
     public static void main(String[] args) throws IOException {
         TherapySettings therapySettings = new TherapySettings();
         TherapyLog therapyLog = new InMemoryTherapyLog(therapySettings);
-        
+
         Pump pump = new Pump(therapySettings, therapyLog);
-        BolusService bolusService = new BolusService(pump, therapySettings);
+
+        BolusSafety safety = new BolusSafety(pump, therapySettings);
+        BolusService bolusService = new BolusService(pump, therapySettings, safety);
+        
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
         pump.tick(Instant.now());

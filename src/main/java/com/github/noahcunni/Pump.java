@@ -1,5 +1,6 @@
 package com.github.noahcunni;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import com.github.noahcunni.therapy.BolusRequest;
 import com.github.noahcunni.therapy.PumpState;
@@ -117,5 +118,10 @@ public class Pump {
         .append(" BasalOwed: ").append(basalOwed);
 
         return sb.toString();
+    }
+
+    public double getIOB() {
+        long durationMins = (long) (60 * therapySettings.DURRATION_OF_INSULIN_ACTION_HOURS);
+        return therapyLog.countIOB(now.minus(durationMins, ChronoUnit.MINUTES));
     }
 }

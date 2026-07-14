@@ -1,6 +1,7 @@
 package com.github.noahcunni.therapy.bolus;
 
 import com.github.noahcunni.TherapySettings;
+import com.github.noahcunni.therapy.BolusRequest;
 
 public class BolusCalculator {
     private final TherapySettings settings;
@@ -8,7 +9,7 @@ public class BolusCalculator {
         this.settings = settings;
     }
 
-    public DoseProposal calculateBolus() {
-        return new DoseProposal(-1, -1);
+    public BolusProposal preview(BolusRequest req, double IOB) {
+        return null;
     }
 }
