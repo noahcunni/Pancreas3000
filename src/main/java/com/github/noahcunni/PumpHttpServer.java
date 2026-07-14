@@ -1,11 +1,13 @@
-package pump;
+package com.github.noahcunni;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ScheduledExecutorService;
-import pump.therapy.bolus.BolusService;
+
+import com.github.noahcunni.therapy.bolus.BolusService;
 
 public class PumpHttpServer {
     private final int port;

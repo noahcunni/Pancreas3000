@@ -1,4 +1,4 @@
-package pump.therapy.bolus;
+package com.github.noahcunni.therapy.bolus;
 
 public class DoseProposal {
     public final double insulinProposed;

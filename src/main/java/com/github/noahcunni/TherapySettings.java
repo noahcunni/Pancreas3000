@@ -1,6 +1,7 @@
-package pump;
+package com.github.noahcunni;
 
-import pump.therapy.PumpState;
+import com.github.noahcunni.therapy.PumpState;
+
 public class TherapySettings {
     // Basal Settings
     public final double BASAL_PER_HOUR = 1.5;

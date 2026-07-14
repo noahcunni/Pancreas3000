@@ -1,9 +1,10 @@
-package pump;
+package com.github.noahcunni;
 import java.time.Instant;
-import pump.therapy.BolusRequest;
-import pump.therapy.PumpState;
-import pump.therapy.TherapyLog;
-import pump.therapy.bolus.SafetyDecision;
+
+import com.github.noahcunni.therapy.BolusRequest;
+import com.github.noahcunni.therapy.PumpState;
+import com.github.noahcunni.therapy.TherapyLog;
+import com.github.noahcunni.therapy.bolus.SafetyDecision;
 /**
  * TODO: FIX ANY FLOATING POINT DRIFT.
  */

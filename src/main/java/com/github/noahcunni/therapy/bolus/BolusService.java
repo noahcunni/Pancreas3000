@@ -1,7 +1,7 @@
-package pump.therapy.bolus;
+package com.github.noahcunni.therapy.bolus;
 
-import pump.Pump;
-import pump.TherapySettings;
+import com.github.noahcunni.Pump;
+import com.github.noahcunni.TherapySettings;
 
 public class BolusService {
     private final Pump pump;

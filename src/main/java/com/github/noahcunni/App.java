@@ -1,12 +1,13 @@
-package pump;
+package com.github.noahcunni;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import pump.therapy.InMemoryTherapyLog;
-import pump.therapy.TherapyLog;
-import pump.therapy.bolus.BolusService;
+
+import com.github.noahcunni.therapy.InMemoryTherapyLog;
+import com.github.noahcunni.therapy.TherapyLog;
+import com.github.noahcunni.therapy.bolus.BolusService;
 
 public class App {
     public static void main(String[] args) throws IOException {

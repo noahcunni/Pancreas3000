@@ -1,4 +1,4 @@
-package pump.therapy;
+package com.github.noahcunni.therapy;
 
 public class BolusRequest {
     public double amountOfCarbs;

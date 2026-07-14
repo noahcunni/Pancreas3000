@@ -1,9 +1,10 @@
-package pump.therapy;
+package com.github.noahcunni.therapy;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import pump.TherapySettings;
-import pump.therapy.bolus.SafetyDecision;
+
+import com.github.noahcunni.TherapySettings;
+import com.github.noahcunni.therapy.bolus.SafetyDecision;
 
 public class InMemoryTherapyLog implements TherapyLog {
     private TherapySettings settings;

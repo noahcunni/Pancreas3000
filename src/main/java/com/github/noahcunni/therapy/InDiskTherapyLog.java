@@ -1,8 +1,8 @@
-package pump.therapy;
+package com.github.noahcunni.therapy;
 
 import java.time.Instant;
 
-import pump.TherapySettings;
+import com.github.noahcunni.TherapySettings;
 
 public class InDiskTherapyLog implements TherapyLog {
     private TherapySettings settings;

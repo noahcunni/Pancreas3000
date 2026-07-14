@@ -1,8 +1,8 @@
-package pump.therapy;
+package com.github.noahcunni.therapy;
 
 import java.time.Instant;
 
-import pump.TherapySettings;
+import com.github.noahcunni.TherapySettings;
 
 /**
  * Used to keep track of IOB and carbs eaten.
