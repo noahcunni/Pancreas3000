@@ -10,7 +10,6 @@ public class BolusCalculator {
     }
 
     public BolusProposal calculate(BolusRequest req, double IOB) {
-        System.out.println("CALCULATING");
         if (req.carbs != -1) {
             double carbDose = req.carbs / settings.INSULIN_TO_CARB_RATIO;
             double correction = 
@@ -18,10 +17,7 @@ public class BolusCalculator {
                 ? (req.bg - settings.TARGET_GLUCOSE_IN_CALCULATOR) / settings.CORRECTION_FACTOR
                 : 0.0;
             double proposed = carbDose + Math.max(0.0, correction - IOB);
-
-            System.out.println("AUTO INJECTION");
-
-            return new BolusProposal(req.carbs, req.bg, req.insulin);
+            return new BolusProposal(req.carbs, req.bg, proposed);
         }
 
         // Manual insulin injection

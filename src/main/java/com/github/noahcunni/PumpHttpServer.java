@@ -11,6 +11,8 @@ import com.github.noahcunni.therapy.BolusRequest;
 import com.github.noahcunni.therapy.bolus.BolusProposal;
 import com.github.noahcunni.therapy.bolus.BolusService;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -37,6 +39,7 @@ public class PumpHttpServer {
             server.createContext("/", this::handleRoot);
             server.createContext("/status", this::handleStatus);
             server.createContext("/bolus/preview", this::handleBolusRequest);
+            server.createContext("/bolus/confirmation", this::handleBolusConfirmation);
             server.start();
         System.out.println("Pump control listening on port " + port);
     }
@@ -70,10 +73,12 @@ public class PumpHttpServer {
         try {
             String body = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             req = GSON.fromJson(body, BolusRequest.class);
+
             BolusProposal proposal = bolusService.preview(req);
 
-            respond(ex, 200, GSON.toJson(proposal.toString()));
+            respond(ex, 200, GSON.toJson(proposal));
         } catch (Exception e) {
+    
             respond(ex, 500, "{\"error\": " + e + " }");
         } 
     }
@@ -83,7 +88,18 @@ public class PumpHttpServer {
             respond(ex, 405, "{\"error\": POST only}");
             return;
         }
-        
+
+        try {
+            String body = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+            JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
+
+            int bolusId = jsonObject.get("proposalId").getAsInt();
+            bolusService.review(bolusId);
+            respond(ex, 200, "SENT FOR REVIEW");
+        } catch (Exception e) {
+    
+            respond(ex, 500, "{\"error\": " + e + " }");
+        } 
     }
 
     private void respond(HttpExchange ex, int status, String body) throws IOException {

@@ -18,7 +18,7 @@ public class DoseRecord {
     public String reasonReject; // Leave null if accepted
 
     public DoseRecord(Instant time, PumpState pumpState, DoseType doseType,
-        DoseState doseState, double insulinRequested, double amountOfCarbs,
+        DoseState doseState, double insulinRequested, int amountOfCarbs,
         double insulinDelivered, String reasonReject) {
             this.time = time;
             this.pumpState = pumpState;

@@ -10,6 +10,8 @@ public class BolusService {
 
     private final BolusSafety safety;
     private final BolusCalculator calculator;
+
+    private BolusProposal loggedProposal;
     
     public BolusService(Pump pump, TherapySettings settings, BolusSafety safety) {
         this.pump = pump;
@@ -32,16 +34,28 @@ public class BolusService {
         SafetyDecision preview = safety.preview(req);
         
         if (!preview.approved) {
+            System.out.println("BOLUS DENIED: " + preview.reason);
             throw new IllegalArgumentException();
         } 
 
         BolusProposal proposal = calculator.calculate(req, IOB);
 
         // Log with ID 
+        logProposal(proposal);
         return proposal;
     }
 
-    public void review(BolusProposal proposal) {
+    private void logProposal(BolusProposal proposal) {
+        loggedProposal = proposal;
+    }
+
+    public void review(int bolusId) {
+        if (bolusId == loggedProposal.randomId) {
+            pump.bolus(loggedProposal);
+            loggedProposal = null;
+        } else {
+            System.out.println("BOLUS DENIED IN BOLUSSERVICE");
+        }
         // Checked logged id with post.
 
         // If info matches, send in confirmation to pump to pump.

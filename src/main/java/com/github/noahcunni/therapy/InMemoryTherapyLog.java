@@ -4,9 +4,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 import com.github.noahcunni.TherapySettings;
-import com.github.noahcunni.therapy.bolus.SafetyDecision;
+import com.github.noahcunni.therapy.bolus.BolusProposal;
 
-public class InMemoryTherapyLog implements TherapyLog {
+public class InMemoryTherapyLog {
     private TherapySettings settings;
     private ArrayList<DoseRecord> record;
     private int index;
@@ -18,12 +18,10 @@ public class InMemoryTherapyLog implements TherapyLog {
         index = 0;
     }
 
-    @Override
     public void append(DoseRecord r) {
         record.add(r);
     }
 
-    @Override
     public double countIOB(Instant since) {
         // TODO: index IOB entries to relevant ones. 
         // TODO: implement a curvilinear IOB model, insulin peaks around 60 mins not 3 hours
@@ -38,12 +36,10 @@ public class InMemoryTherapyLog implements TherapyLog {
     }
 
 /* ----- ----- ----- LOG ACTIONS ----- ----- ----- */
-    public void logNewBolus(Instant now, TherapySettings settings, BolusRequest bolusReq) {
-        
-    }
-
-    public void logNewBolus(SafetyDecision decision) {
-        
+    public void logNewBolus(Instant now, TherapySettings settings, BolusProposal proposal) {
+            DoseRecord r = new DoseRecord(now, settings.PUMP_STATE, 
+                DoseType.BOLUS, DoseState.ACTIVE, proposal.insulin, proposal.carbs, 0.0, null);
+            record.add(r);
     }
 
     public void logBolusTick(Instant now) {

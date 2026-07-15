@@ -2,9 +2,9 @@ package com.github.noahcunni;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+import com.github.noahcunni.therapy.InMemoryTherapyLog;
 import com.github.noahcunni.therapy.PumpState;
-import com.github.noahcunni.therapy.TherapyLog;
-import com.github.noahcunni.therapy.bolus.SafetyDecision;
+import com.github.noahcunni.therapy.bolus.BolusProposal;
 /**
  * TODO: FIX ANY FLOATING POINT DRIFT.
  */
@@ -12,7 +12,7 @@ public class Pump {
     private static final double MAX_PER_TICK = 0.05;
 
     private final TherapySettings therapySettings;
-    private final TherapyLog therapyLog;
+    private final InMemoryTherapyLog therapyLog;
 
     private Instant now;
 
@@ -25,7 +25,7 @@ public class Pump {
     private PumpState state; 
 
 
-    public Pump(TherapySettings therapySettings, TherapyLog therapyLog) {
+    public Pump(TherapySettings therapySettings, InMemoryTherapyLog therapyLog) {
         this.therapySettings = therapySettings;
         this.therapyLog = therapyLog;
 
@@ -43,7 +43,6 @@ public class Pump {
         this.now = now;
         basal(); // Increment basal
         checkDose(); // Check if due for insulin
-        
         // TODO: Listen for cgm readings, bolus requests
     }
 
@@ -77,7 +76,7 @@ public class Pump {
     }
 /* ----- ----- ----- ----------- ----- ----- ----- */
 
-/* ----- ----- ----- BASAL / BOLUS INCREMENT ----- ----- ---- */
+/* ----- ----- ----- BOLUS / BASAL INCREMENT ----- ----- ---- */
     // Increments basal insulin by the second
     private void basal() { 
         if (state == PumpState.MANUAL) {
@@ -89,18 +88,14 @@ public class Pump {
         }
     }
 
-    public void requestBolus(double unitsRequested) {
-        
-        bolusOwed += unitsRequested; // Add gaurds and http later
-        activeBolus = true;
-    }
-
-    public void Bolus(SafetyDecision decision) {
-        if (activeBolus || !decision.approved) {
+    public void bolus(BolusProposal request) {
+        if (activeBolus) {
             // Log rejection
         } else {
+            therapyLog.logNewBolus(now, therapySettings, request);
             activeBolus = true;
-            bolusOwed += decision.insulin;
+            bolusOwed += request.insulin;
+            // Log bolus
         }
     }
 /* ----- ----- ----- ----- ----- ----- ----- ----- */

@@ -1,30 +1,104 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        .body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color:rgb(139, 107, 59);
+
+        }   
+
+        .header {
+            color: rgb(61, 22, 22);
+            font-weight: 800;
+            font-size: 120px;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input {
+            font-size: 70px;
+            padding: 10px 10px;
+            border-radius: 30px;
+            background-color: antiquewhite;
+        }
+
+        .promptInput {
+            color: rgb(232, 202, 202);
+            font-size: 90px;
+            font-weight: 800;
+        }
+
+        button {
+            margin-top: 80px;
+            color: red;
+            border-radius: 30px;
+            font-size: 60px;
+            padding: 10px 4px;
+        }
+
+        button:hover {
+            background-color: grey;
+        }
+    </style>
     <head>
-        <title>Pancrease3000</title>
+        <title class="header">Pancrease3000</title>
     </head>
 
-    <body>
-        <h1>Hello from java!</h1>
-        <p>More insulin pump related content here</p>
+    <body class="body">
+        <h1 class="header">pancreas-3000</h1>
 
-        <form id="bolusForm" action="/bolus/preview" method="post">
-            <label for="carbs">Carbs:</label>
+        <form id="bolusForm" action="/bolus/preview" method="post" class="form">
+            <label for="carbs" class="promptInput">Carbs:</label>
             <input type="number" id="carbs" name="carbs"><br><br>
-            <label for="glucose">Blood Glucose:</label>
+            <label for="glucose" class="promptInput">Blood Glucose:</label>
             <input type="number" id="glucose" name="glucose"><br><br>
-            <label for="insulin">Insulin:</label>
+            <label for="insulin" class="promptInput">Insulin:</label>
             <input type="number" id="insulin" name="insulin"><br><br>
             <input type="submit" value="Submit">
         </form>
+
+        <div id="proposal"></div>
+
+        <button type="button" id='confirmButton'>Confirm Dose</button>
+        
         <script>
+            let proposalId = null;
             document.getElementById('bolusForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const data = await fetch('/bolus/preview', {
+                const res = await fetch('/bolus/preview', {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ carbs: +carbs.value, bg: +glucose.value, insulin: +insulin.value })
                 });
+
+                const out = document.getElementById('proposal');
+                if (!res.ok) {
+                    out.textContent = 'error ' + res.status;
+                    proposalId = null;
+                    return;
+                }
+                const proposal = await res.json();
+                out.textContent = JSON.stringify(proposal);
+                proposalId = proposal.randomId; 
+            });
+
+            document.getElementById('confirmButton').addEventListener('click', async (e) => {
+                e.preventDefault();
+                const bolusId = document.getElementById("proposal");
+
+                const res = await fetch('/bolus/confirmation', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ proposalId })
+                });
+
+                proposalId = null;
             });
         </script>
     </body>

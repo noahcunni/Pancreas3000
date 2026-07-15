@@ -13,7 +13,7 @@ import com.github.noahcunni.therapy.bolus.BolusService;
 public class App {
     public static void main(String[] args) throws IOException {
         TherapySettings therapySettings = new TherapySettings();
-        TherapyLog therapyLog = new InMemoryTherapyLog(therapySettings);
+        InMemoryTherapyLog therapyLog = new InMemoryTherapyLog(therapySettings);
 
         Pump pump = new Pump(therapySettings, therapyLog);
 
@@ -22,15 +22,13 @@ public class App {
         
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-        pump.tick(Instant.now());
-        pump.requestBolus(0.20);
-
         new PumpHttpServer(8080, bolusService, pump, scheduler).start();
 
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 pump.tick(Instant.now());
             } catch (Exception e) {
+                e.printStackTrace();
                 // log.error("tick failed", e);
                 // pump.enterFault(e);
             }
