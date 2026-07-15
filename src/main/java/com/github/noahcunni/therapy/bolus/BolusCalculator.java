@@ -9,7 +9,22 @@ public class BolusCalculator {
         this.settings = settings;
     }
 
-    public BolusProposal preview(BolusRequest req, double IOB) {
+    public BolusProposal calculate(BolusRequest req, double IOB) {
+        if (req.carbs != -1) {
+            double carbDose = req.carbs / settings.INSULIN_TO_CARB_RATIO;
+            double correction = 
+                req.bg > settings.CORRECT_ABOVE_GLUCOSE_IN_CALCULATOR 
+                ? (req.bg - settings.TARGET_GLUCOSE_IN_CALCULATOR) / settings.CORRECTION_FACTOR
+                : 0.0;
+            double proposed = carbDose + Math.max(0.0, correction - IOB);
+            return new BolusProposal(req.carbs, req.bg, req.insulin);
+        }
+
+        // Manual insulin injection
+        if (req.carbs == -1 && req.insulin >= 0.05) {
+            return new BolusProposal(req.carbs, req.bg, req.insulin);
+        }
+        
         return null;
     }
 }

@@ -1,11 +1,13 @@
 package com.github.noahcunni.therapy.bolus;
 
 public class BolusProposal {
-    public final double insulinProposed;
-    public final double IOB;
+    public final int carbs;
+    public final int bg;
+    public final double insulin;
 
-    public BolusProposal(double insulinProposed, double IOB) {
-        this.insulinProposed = insulinProposed;
-        this.IOB = IOB;
+    public BolusProposal(int carbs, int bg, double insulin) {
+        this.carbs = carbs;
+        this.bg = bg;
+        this.insulin = insulin;
     }
 }

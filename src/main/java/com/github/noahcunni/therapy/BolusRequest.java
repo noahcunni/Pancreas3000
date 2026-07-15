@@ -1,17 +1,13 @@
 package com.github.noahcunni.therapy;
 
 public class BolusRequest {
-    public double amountOfCarbs;
-    public double insulinRequested;
-    public String reasonReject;
+    public final int carbs;
+    public final int bg;
+    public final double insulin;
 
-    public double insulinCalculated;
-    public double insulinApproved;
-
-    public BolusRequest(double insulinRequested, double amountOfCarbs, 
-        String reasonReject) {
-            this.insulinRequested = insulinRequested;
-            this.amountOfCarbs = amountOfCarbs;
-            this.reasonReject = reasonReject;
+    public BolusRequest(int carbs, int bg, double insulin) {
+        this.carbs = carbs;
+        this.bg = bg;
+        this.insulin = insulin;
     }
 }

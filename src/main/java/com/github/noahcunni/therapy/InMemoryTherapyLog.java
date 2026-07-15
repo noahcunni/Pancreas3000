@@ -26,6 +26,8 @@ public class InMemoryTherapyLog implements TherapyLog {
     @Override
     public double countIOB(Instant since) {
         // TODO: index IOB entries to relevant ones. 
+        // TODO: implement a curvilinear IOB model, insulin peaks around 60 mins not 3 hours
+        
         insulinOnBoard = 0;
         for (DoseRecord r : record) {
             if (r.time.isAfter(since)) {
@@ -37,10 +39,7 @@ public class InMemoryTherapyLog implements TherapyLog {
 
 /* ----- ----- ----- LOG ACTIONS ----- ----- ----- */
     public void logNewBolus(Instant now, TherapySettings settings, BolusRequest bolusReq) {
-        DoseRecord r = new DoseRecord(now, settings.PUMP_STATE, DoseType.BOLUS,
-            DoseState.ACTIVE, bolusReq.insulinRequested, bolusReq.amountOfCarbs,
-             0.0, bolusReq.reasonReject);
-        record.add(r);
+        
     }
 
     public void logNewBolus(SafetyDecision decision) {
