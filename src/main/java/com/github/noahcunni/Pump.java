@@ -2,7 +2,6 @@ package com.github.noahcunni;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import com.github.noahcunni.therapy.BolusRequest;
 import com.github.noahcunni.therapy.PumpState;
 import com.github.noahcunni.therapy.TherapyLog;
 import com.github.noahcunni.therapy.bolus.SafetyDecision;
@@ -91,18 +90,18 @@ public class Pump {
     }
 
     public void requestBolus(double unitsRequested) {
-        BolusRequest bolusReq = new BolusRequest(unitsRequested, 4.05, null);
-        therapyLog.logNewBolus(now, therapySettings, bolusReq);
+        
         bolusOwed += unitsRequested; // Add gaurds and http later
         activeBolus = true;
     }
 
     public void Bolus(SafetyDecision decision) {
-       /* therapyLog.logNewBolus(decision);
-        if (decision.approved) {
-            bolusOwed += decision.insulinApproved; // Add gaurds and http later
+        if (activeBolus || !decision.approved) {
+            // Log rejection
+        } else {
             activeBolus = true;
-        }*/
+            bolusOwed += decision.insulin;
+        }
     }
 /* ----- ----- ----- ----- ----- ----- ----- ----- */
 

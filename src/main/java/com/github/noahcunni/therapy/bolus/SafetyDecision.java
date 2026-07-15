@@ -7,9 +7,10 @@ public class SafetyDecision {
     public final double carbs;
     public final int bg;
     public final double insulin;
+
     public SafetyDecision(boolean approved, String reason, 
         double carbs, int bg, double insulin) {
-        this.approved = false;
+        this.approved = approved;
         this.reason = reason;
         this.carbs = carbs;
         this.bg = bg;

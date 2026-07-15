@@ -19,21 +19,33 @@ public class BolusService {
         this.calculator = new BolusCalculator(settings);
     }
 
-    public SafetyDecision preview(BolusRequest req) {
+    public BolusProposal preview(BolusRequest req) {
         double IOB = pump.getIOB();
+
+        // Check bounds: remove safety, stupid class.
+
+        // calculation,
+
+        // Log calculation with id in proposal, with current time stamp
 
         // Check cgm vlaues, carbs, and insulin input.
         SafetyDecision preview = safety.preview(req);
         
         if (!preview.approved) {
-            return preview;
+            throw new IllegalArgumentException();
         } 
 
         BolusProposal proposal = calculator.calculate(req, IOB);
-        
-        SafetyDecision finalDecision = safety.review(proposal, IOB);
 
         // Log with ID 
-        return finalDecision;
+        return proposal;
+    }
+
+    public void review(BolusProposal proposal) {
+        // Checked logged id with post.
+
+        // If info matches, send in confirmation to pump to pump.
+
+        // if messed up throw in an exception.
     }
 }

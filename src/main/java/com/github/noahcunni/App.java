@@ -17,7 +17,7 @@ public class App {
 
         Pump pump = new Pump(therapySettings, therapyLog);
 
-        BolusSafety safety = new BolusSafety(pump, therapySettings);
+        BolusSafety safety = new BolusSafety(therapySettings);
         BolusService bolusService = new BolusService(pump, therapySettings, safety);
         
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();

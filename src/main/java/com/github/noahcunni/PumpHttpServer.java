@@ -1,15 +1,15 @@
 package com.github.noahcunni;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ScheduledExecutorService;
 
 import com.github.noahcunni.therapy.BolusRequest;
+import com.github.noahcunni.therapy.bolus.BolusProposal;
 import com.github.noahcunni.therapy.bolus.BolusService;
-import com.github.noahcunni.therapy.bolus.SafetyDecision;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -34,36 +34,56 @@ public class PumpHttpServer {
 
     public void start() throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+            server.createContext("/", this::handleRoot);
             server.createContext("/status", this::handleStatus);
             server.createContext("/bolus/preview", this::handleBolusRequest);
             server.start();
         System.out.println("Pump control listening on port " + port);
     }
 
+    private void handleRoot(HttpExchange ex) throws IOException {
+        try (var in = PumpHttpServer.class.getResourceAsStream("/web/index.html")) {
+            if (in == null) throw new FileNotFoundException("/web/index.html not on classpath");
+            respondHtml(ex, 200, new String(in.readAllBytes(), StandardCharsets.UTF_8));
+            System.out.println("ROOT PINGED");
+        } catch (Exception e) {
+            respond(ex, 500, "Error getting root page: " + e);
+        }
+    }
+
     private void handleStatus(HttpExchange ex) throws IOException {
         try {
             var status = pumpThread.submit(() -> pump.status()).get();
+            System.out.println("STATUS PINGED");
             respond(ex, 200, GSON.toJson(status));
         } catch (Exception e) {
-            respond(ex, 500, "Error getting pump status");
+            respond(ex, 500, "");
         }
     }
 
     private void handleBolusRequest(HttpExchange ex) throws IOException {
         if (!ex.getRequestMethod().equals("POST")) {
-            respond(ex, 405, "{\"error\"POST only\"}");
+            respond(ex, 405, "{\"error\": POST only}");
             return;
         }
-
         BolusRequest req;
-        try (var reader = new InputStreamReader(ex.getRequestBody(),
-            StandardCharsets.UTF_8)) {
-                req = GSON.fromJson(reader, BolusRequest.class);
-                SafetyDecision decision = bolusService.preview(req);
-                respond(ex, 200, GSON.toJson(decision));
+        try {
+            String body = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+            req = GSON.fromJson(body, BolusRequest.class);
+            BolusProposal proposal = bolusService.preview(req);
+
+            respond(ex, 200, GSON.toJson(proposal.toString()));
         } catch (Exception e) {
-            respond(ex, 500, "{\"error\": " + e);
+            respond(ex, 500, "{\"error\": " + e + " }");
+        } 
+    }
+
+    private void handleBolusConfirmation(HttpExchange ex) throws IOException {
+        if (!ex.getRequestMethod().equals("POST")) {
+            respond(ex, 405, "{\"error\": POST only}");
+            return;
         }
+        
     }
 
     private void respond(HttpExchange ex, int status, String body) throws IOException {
@@ -74,4 +94,16 @@ public class PumpHttpServer {
             os.write(bytes);
         }
     }
+
+    private void respondHtml(HttpExchange ex, int status, String body) throws IOException {
+        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+        ex.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+        ex.sendResponseHeaders(status, bytes.length);
+        try (OutputStream os = ex.getResponseBody()) {
+            os.write(bytes);
+        }
+    }
 }
+
+
+//(var reader = new InputStreamReader(ex.getRequestBody(), StandardCharsets.UTF_8)) 

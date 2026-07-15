@@ -11,7 +11,7 @@ public class BolusSafety {
     }
    
     public SafetyDecision preview(BolusRequest req) {
-        String reason = null; 
+        String reason = ""; 
         boolean approved = true;
 
         // Is request under carb limit?
@@ -34,11 +34,6 @@ public class BolusSafety {
             reason = "INSULIN MUST BE BETWEEN 0.05 AND " +
                 settings.MAX_BOLUS_PER_MEAL;
         }
-
         return new SafetyDecision(approved, reason, req.carbs, req.bg, req.insulin); 
     }   
-
-    public SafetyDecision review(BolusProposal proposal, double IOB) {
-        return null;
-    }
 }

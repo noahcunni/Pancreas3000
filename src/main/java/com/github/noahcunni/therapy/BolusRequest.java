@@ -10,4 +10,8 @@ public class BolusRequest {
         this.bg = bg;
         this.insulin = insulin;
     }
+
+    public int getCarbs() {
+        return carbs;
+    }
 }

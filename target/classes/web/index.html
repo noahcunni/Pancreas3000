@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pancrease3000</title>
+    </head>
+
+    <body>
+        <h1>Hello from java!</h1>
+        <p>More insulin pump related content here</p>
+
+        <form id="bolusForm" action="/bolus/preview" method="post">
+            <label for="carbs">Carbs:</label>
+            <input type="number" id="carbs" name="carbs"><br><br>
+            <label for="glucose">Blood Glucose:</label>
+            <input type="number" id="glucose" name="glucose"><br><br>
+            <label for="insulin">Insulin:</label>
+            <input type="number" id="insulin" name="insulin"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+        <script>
+            document.getElementById('bolusForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = await fetch('/bolus/preview', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ carbs: +carbs.value, bg: +glucose.value, insulin: +insulin.value })
+                });
+            });
+        </script>
+    </body>
+</html>
