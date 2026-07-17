@@ -45,6 +45,17 @@
         button:hover {
             background-color: grey;
         }
+
+        .submit-button {
+            font-size: 70px;
+            padding: 10px 10px;
+            border-radius: 30px;
+            background-color: antiquewhite;
+        }
+
+        .submit-green {
+            background-color: green;
+        }
     </style>
     <head>
         <title class="header">Pancrease3000</title>
@@ -54,21 +65,31 @@
         <h1 class="header">pancreas-3000</h1>
 
         <form id="bolusForm" action="/bolus/preview" method="post" class="form">
+            <!-- Carbs -->
             <label for="carbs" class="promptInput">Carbs:</label>
-            <input type="number" id="carbs" name="carbs"><br><br>
+            <input type="number" id="carbs" name="carbs" inputmode="numeric"><br><br>
+
+            <!-- BG -->
             <label for="glucose" class="promptInput">Blood Glucose:</label>
-            <input type="number" id="glucose" name="glucose"><br><br>
+            <input type="number" id="glucose" name="glucose" inputmode="numeric"><br><br>
+
+            <!-- Insulin -->
             <label for="insulin" class="promptInput">Insulin:</label>
-            <input type="number" id="insulin" name="insulin"><br><br>
-            <input type="submit" value="Submit">
-        </form>
+            <input type="number" id="insulin" name="insulin" inputmode="decimal"><br><br>
+
+            <!-- Submit -->
+            <input class="submit-button" type="submit" value="Submit" id="submitButton">
+        </form> 
 
         <div id="proposal"></div>
 
         <button type="button" id='confirmButton'>Confirm Dose</button>
         
-        <script>
+        <script>                
+
+/*----- ----- ----- ----- ----- ----- API'S ----- ----- ----- ----- ----- -----*/
             let proposalId = null;
+            const submitButton = docuemnt.getElementById("submitButton");
             document.getElementById('bolusForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const res = await fetch('/bolus/preview', {
@@ -86,6 +107,12 @@
                 const proposal = await res.json();
                 out.textContent = JSON.stringify(proposal);
                 proposalId = proposal.randomId; 
+
+                if (proposalId === null) {
+                    submitButton.classList.remove("submit-green");
+                } else {
+                    submitButton.classList.add("submit-green");
+                }
             });
 
             document.getElementById('confirmButton').addEventListener('click', async (e) => {
@@ -100,6 +127,7 @@
 
                 proposalId = null;
             });
+/*----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----*/
         </script>
     </body>
 </html>

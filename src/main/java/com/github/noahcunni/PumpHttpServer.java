@@ -48,7 +48,6 @@ public class PumpHttpServer {
         try (var in = PumpHttpServer.class.getResourceAsStream("/web/index.html")) {
             if (in == null) throw new FileNotFoundException("/web/index.html not on classpath");
             respondHtml(ex, 200, new String(in.readAllBytes(), StandardCharsets.UTF_8));
-            System.out.println("ROOT PINGED");
         } catch (Exception e) {
             respond(ex, 500, "Error getting root page: " + e);
         }
@@ -57,10 +56,9 @@ public class PumpHttpServer {
     private void handleStatus(HttpExchange ex) throws IOException {
         try {
             var status = pumpThread.submit(() -> pump.status()).get();
-            System.out.println("STATUS PINGED");
             respond(ex, 200, GSON.toJson(status));
         } catch (Exception e) {
-            respond(ex, 500, "");
+            respond(ex, 500, "{\"error\": Status could not be retreieved: " + e + "}");
         }
     }
 
@@ -78,7 +76,6 @@ public class PumpHttpServer {
 
             respond(ex, 200, GSON.toJson(proposal));
         } catch (Exception e) {
-    
             respond(ex, 500, "{\"error\": " + e + " }");
         } 
     }
@@ -98,7 +95,7 @@ public class PumpHttpServer {
             respond(ex, 200, "SENT FOR REVIEW");
         } catch (Exception e) {
     
-            respond(ex, 500, "{\"error\": " + e + " }");
+            respond(ex, 500, "{\"error\": " + e + "}");
         } 
     }
 
