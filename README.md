@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://srsyduts.com">
-    <img src="./docs/banner.svg" alt="pancreas3000Banner" width="800">
+  <a>
+    <img src="./docs/pancreas-3000-banner.svg" alt="pancreas3000Banner" width="800">
   </a>
 </p>
 #

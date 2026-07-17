@@ -1,0 +1,78 @@
+<svg width="1280" height="440" viewBox="0 0 1280 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pancreas-3000: open-loop insulin pump controller">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#161b26"/>
+      <stop offset="1" stop-color="#0e1219"/>
+    </linearGradient>
+    <clipPath id="rounded">
+      <rect width="1280" height="440" rx="24"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#rounded)">
+  <rect width="1280" height="440" fill="url(#bg)"/>
+
+  <!-- faint horizontal grid lines -->
+  <g stroke="#2a3140" stroke-width="1" opacity="0.35">
+    <line x1="0" y1="40" x2="1280" y2="40"/>
+    <line x1="0" y1="95" x2="1280" y2="95"/>
+    <line x1="0" y1="367" x2="1280" y2="367"/>
+    <line x1="0" y1="416" x2="1280" y2="416"/>
+  </g>
+
+  <!-- dotted glucose trace, top -->
+  <g fill="#4c8f8a">
+    <circle cx="20" cy="72" r="4"/><circle cx="52" cy="68" r="4"/><circle cx="84" cy="63" r="4"/>
+    <circle cx="116" cy="59" r="4"/><circle cx="148" cy="57" r="4"/><circle cx="180" cy="56" r="4"/>
+    <circle cx="212" cy="57" r="4"/><circle cx="244" cy="60" r="4"/><circle cx="276" cy="64" r="4"/>
+    <circle cx="308" cy="69" r="4"/><circle cx="340" cy="74" r="4"/><circle cx="372" cy="79" r="4"/>
+    <circle cx="404" cy="83" r="4"/><circle cx="436" cy="86" r="4"/><circle cx="468" cy="88" r="4"/>
+    <circle cx="500" cy="89" r="4"/><circle cx="532" cy="88" r="4"/><circle cx="564" cy="86" r="4"/>
+    <circle cx="596" cy="83" r="4"/><circle cx="628" cy="79" r="4"/><circle cx="660" cy="74" r="4"/>
+    <circle cx="692" cy="69" r="4"/><circle cx="724" cy="64" r="4"/><circle cx="756" cy="60" r="4"/>
+    <circle cx="788" cy="57" r="4"/><circle cx="820" cy="56" r="4"/><circle cx="852" cy="57" r="4"/>
+    <circle cx="884" cy="59" r="4"/><circle cx="916" cy="63" r="4"/><circle cx="948" cy="68" r="4"/>
+    <circle cx="980" cy="72" r="4"/><circle cx="1012" cy="77" r="4"/><circle cx="1044" cy="81" r="4"/>
+    <circle cx="1076" cy="84" r="4"/><circle cx="1108" cy="86" r="4"/><circle cx="1140" cy="87" r="4"/>
+    <circle cx="1172" cy="86" r="4"/><circle cx="1204" cy="84" r="4"/><circle cx="1236" cy="81" r="4"/>
+    <circle cx="1268" cy="77" r="4"/>
+  </g>
+
+  <!-- dotted glucose trace, bottom (mirrored) -->
+  <g fill="#4c8f8a">
+    <circle cx="20" cy="391" r="4"/><circle cx="52" cy="395" r="4"/><circle cx="84" cy="399" r="4"/>
+    <circle cx="116" cy="402" r="4"/><circle cx="148" cy="404" r="4"/><circle cx="180" cy="405" r="4"/>
+    <circle cx="212" cy="404" r="4"/><circle cx="244" cy="402" r="4"/><circle cx="276" cy="398" r="4"/>
+    <circle cx="308" cy="393" r="4"/><circle cx="340" cy="388" r="4"/><circle cx="372" cy="383" r="4"/>
+    <circle cx="404" cy="379" r="4"/><circle cx="436" cy="376" r="4"/><circle cx="468" cy="374" r="4"/>
+    <circle cx="500" cy="373" r="4"/><circle cx="532" cy="374" r="4"/><circle cx="564" cy="376" r="4"/>
+    <circle cx="596" cy="379" r="4"/><circle cx="628" cy="383" r="4"/><circle cx="660" cy="388" r="4"/>
+    <circle cx="692" cy="393" r="4"/><circle cx="724" cy="398" r="4"/><circle cx="756" cy="402" r="4"/>
+    <circle cx="788" cy="404" r="4"/><circle cx="820" cy="405" r="4"/><circle cx="852" cy="404" r="4"/>
+    <circle cx="884" cy="402" r="4"/><circle cx="916" cy="399" r="4"/><circle cx="948" cy="395" r="4"/>
+    <circle cx="980" cy="391" r="4"/><circle cx="1012" cy="386" r="4"/><circle cx="1044" cy="382" r="4"/>
+    <circle cx="1076" cy="378" r="4"/><circle cx="1108" cy="376" r="4"/><circle cx="1140" cy="375" r="4"/>
+    <circle cx="1172" cy="376" r="4"/><circle cx="1204" cy="378" r="4"/><circle cx="1236" cy="382" r="4"/>
+    <circle cx="1268" cy="386" r="4"/>
+  </g>
+
+  <!-- loop icon with arrowhead -->
+  <g transform="translate(640,148)">
+    <path d="M 16.69 -26.71 A 31.5 31.5 0 1 1 -18.07 -25.8" fill="none" stroke="#2dd4bf" stroke-width="9" stroke-linecap="butt"/>
+    <path d="M -4.5 -38 L -14.2 -21 L -29.2 -19 L -20.7 -28 L -25.2 -37.4 Z" fill="#2dd4bf"/>
+  </g>
+
+  <!-- title -->
+  <text x="640" y="260" text-anchor="middle" fill="#eef1f6"
+        font-family="'Segoe UI', Arial, sans-serif" font-size="82" font-weight="800"
+        letter-spacing="16">PANCREAS-3000</text>
+
+  <!-- subtitle -->
+  <text x="640" y="308" text-anchor="middle" fill="#9fd8d2"
+        font-family="'Segoe UI', Arial, sans-serif" font-size="30">Open-loop insulin pump controller</text>
+
+  <!-- tagline row -->
+  <text x="640" y="350" text-anchor="middle" fill="#8b93a3"
+        font-family="'Consolas', 'Courier New', monospace" font-size="19" letter-spacing="4">JAVA&#160;&#160;·&#160;&#160;SAFETY-BOUNDED DOSING&#160;&#160;·&#160;&#160;0.05 U STEPS</text>
+  </g>
+</svg>
