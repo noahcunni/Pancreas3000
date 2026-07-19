@@ -5,8 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.github.noahcunni.motor.Drv8825;
 import com.github.noahcunni.therapy.InMemoryTherapyLog;
-import com.github.noahcunni.therapy.TherapyLog;
 import com.github.noahcunni.therapy.bolus.BolusSafety;
 import com.github.noahcunni.therapy.bolus.BolusService;
 
@@ -15,6 +15,8 @@ public class App {
         TherapySettings therapySettings = new TherapySettings();
         InMemoryTherapyLog therapyLog = new InMemoryTherapyLog(therapySettings);
 
+        Drv8825 hat = new Drv8825(null, 0, 0, 0);
+        
         Pump pump = new Pump(therapySettings, therapyLog);
 
         BolusSafety safety = new BolusSafety(therapySettings);
