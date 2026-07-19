@@ -70,6 +70,7 @@ public class PumpHttpServer {
         BolusRequest req;
         try {
             String body = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+
             req = GSON.fromJson(body, BolusRequest.class);
 
             BolusProposal proposal = bolusService.preview(req);

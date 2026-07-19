@@ -25,6 +25,9 @@ public class App {
             pi4j.shutdown();
         }));
         
+
+        //Drv8825 motor = null;
+
         Pump pump = new Pump(therapySettings, therapyLog, motor);
 
         BolusSafety safety = new BolusSafety(therapySettings);

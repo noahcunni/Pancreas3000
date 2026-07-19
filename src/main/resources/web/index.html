@@ -89,7 +89,7 @@
 
 /*----- ----- ----- ----- ----- ----- API'S ----- ----- ----- ----- ----- -----*/
             let proposalId = null;
-            const submitButton = docuemnt.getElementById("submitButton");
+            const submitButton = document.getElementById("submitButton");
             document.getElementById('bolusForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const res = await fetch('/bolus/preview', {
