@@ -75,7 +75,7 @@ public class Pump {
             }
         // Hand off to motor.
             System.out.println("0.05 Injected. BasalOwed: " + basalOwed + " BolusOwed: " + bolusOwed);
-            motor.turnSteps(true, 10, 2000); // AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH RIGHT HEREEEEEE
+            motor.turnSteps(true, therapySettings.STEPS_PER_MIN_DOSE, 2000); // AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH RIGHT HEREEEEEE
         }
     }
 /* ----- ----- ----- ----------- ----- ----- ----- */

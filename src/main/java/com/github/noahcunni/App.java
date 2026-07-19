@@ -18,7 +18,8 @@ public class App {
         InMemoryTherapyLog therapyLog = new InMemoryTherapyLog(therapySettings);
 
         Context pi4j = Pi4J.newAutoContext();
-        Drv8825 motor = new Drv8825(pi4j, 13, 19, 12);   // dir, step, enable (BCM)
+        Drv8825 motor = new Drv8825(pi4j, 13, 19, 12);   // dir, step, enable
+        
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             motor.stop();

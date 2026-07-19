@@ -19,4 +19,6 @@ public class TherapySettings {
 
     // Closed - Open
     public final PumpState PUMP_STATE = PumpState.MANUAL;
+
+    public final int STEPS_PER_MIN_DOSE = 30; // DO NOT TOUCH UNLESS CALIBRATING
 }
