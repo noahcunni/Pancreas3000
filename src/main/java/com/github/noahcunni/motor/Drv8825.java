@@ -26,6 +26,8 @@ public class Drv8825 {
         for (int i = 0; i < steps; i++) {
             stepOnce(stepDelayMicros);         
         }
+
+        stop();
     }
 
     public void stepOnce(long stepDelayMicros) {
