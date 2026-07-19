@@ -2,6 +2,7 @@ package com.github.noahcunni;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+import com.github.noahcunni.motor.Drv8825;
 import com.github.noahcunni.therapy.InMemoryTherapyLog;
 import com.github.noahcunni.therapy.PumpState;
 import com.github.noahcunni.therapy.bolus.BolusProposal;
@@ -13,6 +14,7 @@ public class Pump {
 
     private final TherapySettings therapySettings;
     private final InMemoryTherapyLog therapyLog;
+    private final Drv8825 motor;
 
     private Instant now;
 
@@ -25,9 +27,10 @@ public class Pump {
     private PumpState state; 
 
 
-    public Pump(TherapySettings therapySettings, InMemoryTherapyLog therapyLog) {
+    public Pump(TherapySettings therapySettings, InMemoryTherapyLog therapyLog, Drv8825 motor) {
         this.therapySettings = therapySettings;
         this.therapyLog = therapyLog;
+        this.motor = motor;
 
         bolusOwed = 0; // CHECK THE THERAPY LOG FOR UNITS OWED
         basalAccum = 0;
@@ -72,7 +75,7 @@ public class Pump {
             }
         // Hand off to motor.
             System.out.println("0.05 Injected. BasalOwed: " + basalOwed + " BolusOwed: " + bolusOwed);
-            
+            motor.turnSteps(true, 10, 2000); // AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH RIGHT HEREEEEEE
         }
     }
 /* ----- ----- ----- ----------- ----- ----- ----- */
@@ -85,7 +88,7 @@ public class Pump {
                 basalAccum -= 0.05;
                 basalOwed += 0.05;
             }
-            basalAccum += (therapySettings.MAX_BASAL_RATE_PER_HOUR / 60000.0);
+            basalAccum += (therapySettings.MAX_BASAL_RATE_PER_HOUR / 3600.0);
         }
     }
 
