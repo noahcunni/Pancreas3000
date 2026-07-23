@@ -1,7 +1,6 @@
 package com.github.noahcunni.therapy.bolus;
 
 import com.github.noahcunni.TherapySettings;
-import com.github.noahcunni.therapy.BolusRequest;
 
 public class BolusSafety {
     private final TherapySettings settings;

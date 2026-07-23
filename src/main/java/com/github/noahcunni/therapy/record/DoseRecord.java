@@ -1,4 +1,4 @@
-package com.github.noahcunni.therapy;
+package com.github.noahcunni.therapy.record;
 
 import java.time.Instant;
 

@@ -2,7 +2,6 @@ package com.github.noahcunni.therapy.bolus;
 
 import com.github.noahcunni.Pump;
 import com.github.noahcunni.TherapySettings;
-import com.github.noahcunni.therapy.BolusRequest;
 
 public class BolusService {
     private final Pump pump;
@@ -21,23 +20,13 @@ public class BolusService {
         this.calculator = new BolusCalculator(settings);
     }
 
-    public BolusProposal preview(BolusRequest req) {
-        double IOB = pump.getIOB();
-
-        // Check bounds: remove safety, stupid class.
-
-        // calculation,
-
-        // Log calculation with id in proposal, with current time stamp
-
-        // Check cgm vlaues, carbs, and insulin input.
+    public BolusProposal preview(BolusRequest req) throws BolusRejectedException {
         SafetyDecision preview = safety.preview(req);
         
-        if (!preview.approved) {
-            System.out.println("BOLUS DENIED: " + preview.reason);
-            throw new IllegalArgumentException();
-        } 
+        if (!preview.approved)
+            throw new BolusRejectedException(preview.reason);
 
+        double IOB = pump.getIOB();
         BolusProposal proposal = calculator.calculate(req, IOB);
 
         // Log with ID 
@@ -49,17 +38,14 @@ public class BolusService {
         loggedProposal = proposal;
     }
 
-    public void review(int bolusId) {
-        if (bolusId == loggedProposal.randomId) {
-            pump.bolus(loggedProposal);
-            loggedProposal = null;
-        } else {
-            System.out.println("BOLUS DENIED IN BOLUSSERVICE");
-        }
-        // Checked logged id with post.
+    public void review(int bolusId) throws BolusRejectedException {
+        if (loggedProposal == null)
+            throw new BolusRejectedException("No bolus proposal to confirm");
 
-        // If info matches, send in confirmation to pump to pump.
+        if (bolusId != loggedProposal.randomId)
+            throw new BolusRejectedException("Bolus proposal id does not match logged proposals id");
 
-        // if messed up throw in an exception.
+        pump.bolus(loggedProposal);
+        loggedProposal = null; // Reset proposal status
     }
 }

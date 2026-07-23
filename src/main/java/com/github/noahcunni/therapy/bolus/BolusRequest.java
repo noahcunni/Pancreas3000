@@ -1,4 +1,4 @@
-package com.github.noahcunni.therapy;
+package com.github.noahcunni.therapy.bolus;
 
 public class BolusRequest {
     public final int carbs;

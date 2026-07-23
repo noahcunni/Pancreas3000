@@ -90,22 +90,35 @@
 /*----- ----- ----- ----- ----- ----- API'S ----- ----- ----- ----- ----- -----*/
             let proposalId = null;
             const submitButton = document.getElementById("submitButton");
+
             document.getElementById('bolusForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const res = await fetch('/bolus/preview', {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ carbs: +carbs.value, bg: +glucose.value, insulin: +insulin.value })
-                });
-
                 const out = document.getElementById('proposal');
-                if (!res.ok) {
-                    out.textContent = 'error ' + res.status;
+
+                let res;
+                try {
+                    res = await fetch('/bolus/preview', {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ carbs: +carbs.value, bg: +glucose.value, insulin: +insulin.value })
+                });
+                } catch (networkError) {
+                    out.textContent = "Can't reach the pump right now - check network or hotspot";
                     proposalId = null;
+                    submitButton.classList.remove("submit-green");
+                    return;
+                } 
+
+                if (!res.ok) { // Pump rejected request
+                    const body = await res.json().catch(() => ({}));
+                    out.textContent = body.error ?? ('Error' + res.status);
+                    proposalId = null;
+                    submitButton.classList.remove("submit-green");
                     return;
                 }
+
                 const proposal = await res.json();
-                out.textContent = JSON.stringify(proposal);
+                out.textContent = `Dose ${proposal.insulin} Units`;
                 proposalId = proposal.randomId; 
 
                 if (proposalId === null) {
@@ -117,14 +130,32 @@
 
             document.getElementById('confirmButton').addEventListener('click', async (e) => {
                 e.preventDefault();
-                const bolusId = document.getElementById("proposal");
+                const out = document.getElementById('proposal');
 
-                const res = await fetch('/bolus/confirmation', {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ proposalId })
-                });
+                if (proposalId === null) {
+                    out.textContent = 'No proposal active - preview dose first';
+                    return;
+                }
 
+                let res;
+                try {
+                    res = await fetch('/bolus/confirmation', {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ proposalId })
+                    });
+                } catch (networkError) {
+                    out.textContent = "Lost connection while sending confirmation, CHECK PUMP FOR ACTIVITY, post could have reached";
+                    return;
+                }
+
+                if (!res.ok) {
+                    const body = await res.json().catch(() => ({}));
+                    out.textContent = 'Dose refused: ' + (body.error ?? res.statsu);
+                    return;
+                }
+
+                out.textContent = 'Dose confirmed';
                 proposalId = null;
             });
 /*----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----*/

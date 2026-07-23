@@ -1,8 +1,9 @@
-package com.github.noahcunni.therapy;
+package com.github.noahcunni.therapy.record;
 
 import java.time.Instant;
 
 import com.github.noahcunni.TherapySettings;
+import com.github.noahcunni.therapy.bolus.BolusRequest;
 
 /**
  * Used to keep track of IOB and carbs eaten.

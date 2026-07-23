@@ -1,10 +1,10 @@
 package com.github.noahcunni;
 
-import com.github.noahcunni.therapy.PumpState;
+import com.github.noahcunni.therapy.record.PumpState;
 
 public class TherapySettings {
     // Basal Settings
-    public final double BASAL_PER_HOUR = 1.5;
+    public final double BASAL_PER_HOUR = 0; // TESTING 
     public final double MAX_BASAL_RATE_PER_HOUR = 3;
 
     // Bolus settings

@@ -2,10 +2,10 @@ package com.github.noahcunni;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import com.github.noahcunni.motor.Drv8825;
-import com.github.noahcunni.therapy.InMemoryTherapyLog;
-import com.github.noahcunni.therapy.PumpState;
+import com.github.noahcunni.motor.MotorInterface;
 import com.github.noahcunni.therapy.bolus.BolusProposal;
+import com.github.noahcunni.therapy.record.InMemoryTherapyLog;
+import com.github.noahcunni.therapy.record.PumpState;
 /**
  * TODO: FIX ANY FLOATING POINT DRIFT.
  */
@@ -14,7 +14,7 @@ public class Pump {
 
     private final TherapySettings therapySettings;
     private final InMemoryTherapyLog therapyLog;
-    private final Drv8825 motor;
+    private final MotorInterface motor;
 
     private Instant now;
 
@@ -27,7 +27,7 @@ public class Pump {
     private PumpState state; 
 
 
-    public Pump(TherapySettings therapySettings, InMemoryTherapyLog therapyLog, Drv8825 motor) {
+    public Pump(TherapySettings therapySettings, InMemoryTherapyLog therapyLog, MotorInterface motor) {
         this.therapySettings = therapySettings;
         this.therapyLog = therapyLog;
         this.motor = motor;
@@ -75,7 +75,7 @@ public class Pump {
             }
         // Hand off to motor.
             System.out.println("0.05 Injected. BasalOwed: " + basalOwed + " BolusOwed: " + bolusOwed);
-            motor.turnSteps(true, therapySettings.STEPS_PER_MIN_DOSE, 2000); // AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH RIGHT HEREEEEEE
+            motor.administerDose();
         }
     }
 /* ----- ----- ----- ----------- ----- ----- ----- */

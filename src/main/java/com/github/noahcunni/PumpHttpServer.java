@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 
-import com.github.noahcunni.therapy.BolusRequest;
 import com.github.noahcunni.therapy.bolus.BolusProposal;
+import com.github.noahcunni.therapy.bolus.BolusRejectedException;
+import com.github.noahcunni.therapy.bolus.BolusRequest;
 import com.github.noahcunni.therapy.bolus.BolusService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -48,8 +51,9 @@ public class PumpHttpServer {
         try (var in = PumpHttpServer.class.getResourceAsStream("/web/index.html")) {
             if (in == null) throw new FileNotFoundException("/web/index.html not on classpath");
             respondHtml(ex, 200, new String(in.readAllBytes(), StandardCharsets.UTF_8));
+            
         } catch (Exception e) {
-            respond(ex, 500, "Error getting root page: " + e);
+            respond(ex, 500, GSON.toJson(Map.of("error", "Error getting root page: " + e)));
         }
     }
 
@@ -58,32 +62,34 @@ public class PumpHttpServer {
             var status = pumpThread.submit(() -> pump.status()).get();
             respond(ex, 200, GSON.toJson(status));
         } catch (Exception e) {
-            respond(ex, 500, "{\"error\": Status could not be retreieved: " + e + "}");
+            respond(ex, 500, GSON.toJson(Map.of("error", "Status could not be retreieved: " + e)));
         }
     }
 
     private void handleBolusRequest(HttpExchange ex) throws IOException {
         if (!ex.getRequestMethod().equals("POST")) {
-            respond(ex, 405, "{\"error\": POST only}");
+            respond(ex, 405, GSON.toJson(Map.of("error", "POST only")));
             return;
         }
         BolusRequest req;
         try {
             String body = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-
             req = GSON.fromJson(body, BolusRequest.class);
-
             BolusProposal proposal = bolusService.preview(req);
-
             respond(ex, 200, GSON.toJson(proposal));
+
+        } catch (BolusRejectedException e) {
+            respond(ex, 400, GSON.toJson(Map.of("error", e.getMessage())));
+        } catch (JsonParseException e) {
+            respond(ex, 400, GSON.toJson(Map.of("error", "Malformed JSON")));
         } catch (Exception e) {
-            respond(ex, 500, "{\"error\": " + e + " }");
-        } 
+            respond(ex, 500, GSON.toJson(Map.of("error", "Internal error: " + e)));
+        }
     }
 
     private void handleBolusConfirmation(HttpExchange ex) throws IOException {
         if (!ex.getRequestMethod().equals("POST")) {
-            respond(ex, 405, "{\"error\": POST only}");
+            respond(ex, 405, GSON.toJson(Map.of("error", "POST only")));
             return;
         }
 
@@ -94,10 +100,13 @@ public class PumpHttpServer {
             int bolusId = jsonObject.get("proposalId").getAsInt();
             bolusService.review(bolusId);
             respond(ex, 200, "SENT FOR REVIEW");
+        } catch (BolusRejectedException e) {
+            respond(ex, 400, GSON.toJson(Map.of("error", e.getMessage())));
+        } catch (JsonParseException e) {
+            respond(ex, 400, GSON.toJson(Map.of("error", "Malformed JSON")));
         } catch (Exception e) {
-    
-            respond(ex, 500, "{\"error\": " + e + "}");
-        } 
+            respond(ex, 500, GSON.toJson(Map.of("error", "Internal error: " + e)));
+        }
     }
 
     private void respond(HttpExchange ex, int status, String body) throws IOException {
