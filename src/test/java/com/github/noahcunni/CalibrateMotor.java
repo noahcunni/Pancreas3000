@@ -14,13 +14,13 @@ public class CalibrateMotor {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             motor.close();
             pi4j.shutdown();
-            motor.printTickCount();
+           // motor.printTickCount();
         }));
 
         for (int i = 0; i < 300 * 20; i++) {
             motor.administerDose();
         }
-        motor.printTickCount();
+        // motor.printTickCount();
 
     }
 }

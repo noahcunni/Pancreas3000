@@ -11,16 +11,12 @@ public class Drv8825 implements MotorInterface{
     private final int STEPS_PER_MIN_DOSE;
     private final int STEP_DELAY_MICROS = 2000;
 
-    private int tickCount;
-
     public Drv8825(Context pi4j, int dirPin, int stepPin, int enablePin, int STEPS_PER_MIN_DOSE) {
         // Claim each gpio pin on run
         this.dir = pi4j.digitalOutput().create(dirPin);
         this.step = pi4j.digitalOutput().create(stepPin);
         this.enable = pi4j.digitalOutput().create(enablePin);
         this.STEPS_PER_MIN_DOSE = STEPS_PER_MIN_DOSE;
-
-        tickCount = 0;
     }
 
     public void administerDose() {
@@ -31,7 +27,7 @@ public class Drv8825 implements MotorInterface{
         stop();
     }
 
-    public void turnSteps(boolean forward, long stepDelayMicros) { // Make private after testing
+    private void turnSteps(boolean forward, long stepDelayMicros) {
         enable.high(); // energize motor coils.
 
         if (forward) // Set direction
@@ -44,7 +40,6 @@ public class Drv8825 implements MotorInterface{
         }
 
         stop();
-        tickCount++;
     }
 
     private void stepOnce(long stepDelayMicros) {
@@ -59,11 +54,7 @@ public class Drv8825 implements MotorInterface{
     }
 
     private static void sleepMicros(long micros) {
-        long end = System.nanoTime() + micros * 50;
+        long end = System.nanoTime() + micros * 1_000;
         while (System.nanoTime() < end) {}
-    }
-
-    public void printTickCount() {
-        System.out.println(tickCount);
     }
 }
